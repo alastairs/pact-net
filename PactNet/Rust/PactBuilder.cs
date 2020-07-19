@@ -45,7 +45,14 @@ namespace PactNet.Rust
             IPAddress host = IPAddress.Loopback, string sslCert = null, string sslKey = null)
         {
             init("PACT_LOG_LEVEL");
-            var portInUse = create_mock_server("path to pact", $"{host}:{port}", false);
+            var address = host switch
+            {
+                IPAddress.Loopback => $"127.0.0.1:{port}",
+                IPAddress.Any => $"0.0.0.0:{port}",
+                _ => throw new NotSupportedException($"Enum value {host} is not supported")
+            };
+
+            var portInUse = create_mock_server("path to pact", address, false);
             Port = portInUse switch
             {
                 -1 => throw new ArgumentException(message: "A null pointer was received"),
