@@ -11,20 +11,27 @@ namespace PactNet.Rust
 
     public class PactBuilder : IPactBuilder, IDisposable
     {
-        private string _consumerName;
-        private string _providerName;
+        public string ConsumerName { get; private set; }
+
+        public string ProviderName { get; private set; }
 
         public int Port { get; private set; }
 
         public IPactBuilder ServiceConsumer(string consumerName)
         {
-            _consumerName = consumerName;
+            ConsumerName = string.IsNullOrWhiteSpace(consumerName)
+                ? throw new ArgumentException(nameof(consumerName))
+                : consumerName;
+
             return this;
         }
 
         public IPactBuilder HasPactWith(string providerName)
         {
-            _providerName = providerName;
+            ProviderName = string.IsNullOrWhiteSpace(providerName)
+                ? throw new ArgumentException(nameof(providerName))
+                : providerName;
+
             return this;
         }
 
@@ -56,7 +63,7 @@ namespace PactNet.Rust
 
         public void Build()
         {
-            new_pact(_consumerName, _providerName);
+            new_pact(ConsumerName, ProviderName);
             write_pact_file(Port, Constants.PactPath);
             Dispose();
         }
