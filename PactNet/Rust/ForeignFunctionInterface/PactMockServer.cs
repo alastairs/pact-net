@@ -6,7 +6,7 @@ namespace PactNet.Rust.ForeignFunctionInterface
 {
     internal class PactMockServer
     {
-        private const string PactMockServerDllName = "pact_mock_server_ffi-windows-x86_64.dll";
+        private const string PactMockServerDllName = @"Rust\ForeignFunctionInterface\libpact_mock_server_ffi-windows-x86_64.dll";
 
         [DllImport(PactMockServerDllName, CharSet = CharSet.Unicode)]
         internal static extern void init(string log_env_var);

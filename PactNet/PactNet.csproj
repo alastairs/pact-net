@@ -32,7 +32,7 @@
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Rust\ForeignFunctionInterface\lib\*.*">
+    <None Update="Rust\ForeignFunctionInterface\libpact_mock_server_ffi-windows-x86_64.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
