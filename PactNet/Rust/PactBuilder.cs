@@ -9,7 +9,7 @@ namespace PactNet.Rust
 {
     using static ForeignFunctionInterface.PactMockServer;
 
-    public class PactMockServer : IPactBuilder, IDisposable
+    public class PactBuilder : IPactBuilder, IDisposable
     {
         private string _consumerName;
         private string _providerName;
@@ -72,7 +72,7 @@ namespace PactNet.Rust
             cleanup_mock_server(Port);
         }
 
-        ~PactMockServer()
+        ~PactBuilder()
         {
             ReleaseUnmanagedResources();
         }
