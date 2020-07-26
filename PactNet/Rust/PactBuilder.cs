@@ -9,6 +9,23 @@ namespace PactNet.Rust
 {
     using static ForeignFunctionInterface.PactMockServer;
 
+    /// <remarks>
+    /// The rust library lifecycle is different from the Ruby implementation.
+    /// The lifecycle is:
+    /// 1. init()
+    /// 2. create_mock_server expects you to pass the already generated Pact
+    ///    (using the standardised format) to indicate the interactions that the
+    ///    current test will support, or you could use
+    ///    create_mock_server_for_pact to get a PactHandle and build it up that
+    ///    way
+    /// 3. You would then have the test code execute the test against the server
+    ///    you just started
+    /// 4. Call mock_server_matched to see if the test matched everything
+    /// 5. Call mock_server_mismatches if there was mismatches and display to
+    ///    the user
+    /// 6. write_pact_file (only if the test is successful
+    /// 7. Call cleanup_mock_server to shut things down
+    /// </remarks>
     public class PactBuilder : IPactBuilder, IDisposable
     {
         public string ConsumerName { get; private set; }
@@ -16,6 +33,8 @@ namespace PactNet.Rust
         public string ProviderName { get; private set; }
 
         public int Port { get; private set; }
+
+        public PactBuilder() => init("PACT_LOG_LEVEL");
 
         public IPactBuilder ServiceConsumer(string consumerName)
         {
@@ -44,7 +63,6 @@ namespace PactNet.Rust
         public IMockProviderService MockService(int port, JsonSerializerSettings jsonSerializerSettings, bool enableSsl = false,
             IPAddress host = IPAddress.Loopback, string sslCert = null, string sslKey = null)
         {
-            init("PACT_LOG_LEVEL");
             var address = host switch
             {
                 IPAddress.Loopback => $"127.0.0.1:{port}",
